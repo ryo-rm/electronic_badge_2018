@@ -41,6 +41,11 @@ const { argv } = require('yargs')
       default: false,
       type: 'boolean'
     },
+    'debug': {
+      describe: 'debug log',
+      default: false,
+      type: 'boolean'
+    },
     'timeout': {
       describe: 'browser navigation timeout(ms)',
       default: 3000000,
@@ -53,6 +58,7 @@ const { exec } = require('child_process');
 
 (async () => {
   try {
+    argv.debug && console.log('browser launch.');
 
     const width = argv.x * argv.scale;
     const height = argv.y * argv.scale;
@@ -79,17 +85,21 @@ const { exec } = require('child_process');
       await page.setViewport({ width, height });
     }
 
+    argv.debug && console.log('goto', argv.u);
     await page.goto(argv.u);
 
     if (argv.selector) {
+      argv.debug && console.log('scroll', argv.selector);
       await page.evaluate((selector) => {
         document.querySelector(selector).scrollIntoView();
       }, argv.selector);
     }
+    argv.debug && console.log('take screenshot.', argv.p);
     await page.screenshot({path: argv.p});
   
     browser.close();
 
+    argv.debug && console.log('show img.');
     const { stdout, stderr } = exec(`${process.cwd()}/../show_img/show_img.py ${argv.p}`);
     //console.log(stdout);
   } catch (err) {
