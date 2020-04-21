@@ -3,7 +3,7 @@
 const { argv } = require('yargs')
   .usage('Usage: $0 [options]')
   .example('$0 -u http://example.com', 'render HTML from webpage')
-  .example('$0 -u /path/to.file', 'render HTML from file')
+  .example('$0 -u file:///path/to/file', 'render HTML from file')
   .options({
     'url': {
       alias: 'u',
