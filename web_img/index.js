@@ -22,6 +22,10 @@ const { argv } = require('yargs')
       default: 400,
       type: 'number'
     },
+    'selector': {
+      describe: 'scroll to selector',
+      type: 'string'
+    },
     'scale': {
       describe: 'viwport scale',
       default: 1,
@@ -74,7 +78,14 @@ const { exec } = require('child_process');
     } else {
       await page.setViewport({ width, height });
     }
+
     await page.goto(argv.u);
+
+    if (argv.selector) {
+      await page.evaluate((selector) => {
+        document.querySelector(selector).scrollIntoView();
+      }, argv.selector);
+    }
     await page.screenshot({path: argv.p});
   
     browser.close();
