@@ -36,6 +36,11 @@ const { argv } = require('yargs')
       describe: 'save path',
       default: '/tmp/webimg.png'
     },
+    'disableJs': {
+      describe: 'disable javascript',
+      default: false,
+      type: 'boolean'
+    },
     'sp': {
       describe: 'emulate smartphone',
       default: false,
@@ -69,6 +74,7 @@ const { exec } = require('child_process');
       headless: true
     });
     const page = await browser.newPage();
+    argv.disableJs && await page.setJavaScriptEnabled(false);
     page.setDefaultNavigationTimeout(argv.timeout);
     if (argv.sp) {
       // iPhone X/Chrome
